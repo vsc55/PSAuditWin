@@ -182,6 +182,17 @@ $commands = @(
         LogShowDebug = $debugMode;
     },
     @{
+        Command      = 'Get-CimInstance  -Namespace "Root\CIMv2\Security\MicrosoftTpm" -Class Win32_Tpm';
+        Sudo         = $false;
+        FileName     = "Win32_Tpm.xml";
+        Label        = "TPM";
+        Log          = $true;
+        LogSelect    = $null;
+        LogListMode  = $true;
+        # LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    },
+    @{
         Command      = "Get-Printer";
         Sudo         = $false;
         FileName     = "Printer.xml";
@@ -288,6 +299,39 @@ $commands = @(
     #     Command = "Get-CimInstance -ClassName Win32_LogicalDisk";
     #     FileName = "CimInstance_LogicalDisk.xml";
     # }, 
+    @{
+        Command      = "Get-PhysicalDisk";
+        Sudo         = $false;
+        FileName     = "PSPhysicalDisk.xml";
+        Label        = "Physical Disk";
+        Log          = $true;
+        LogSelect    = $null;
+        # LogListMode  = $true;
+        # LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    },
+    @{
+        Command      = "Get-Volume";
+        Sudo         = $false;
+        FileName     = "PSVolume.xml";
+        Label        = "Volume";
+        Log          = $true;
+        LogSelect    = $null;
+        # LogListMode  = $true;
+        # LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    },
+    @{
+        Command      = "Get-Partition";
+        Sudo         = $false;
+        FileName     = "PSPartition.xml";
+        Label        = "Partition";
+        Log          = $true;
+        LogSelect    = @('DiskPath', 'DiskNumber', 'PartitionNumber', 'DriveLetter');
+        # LogListMode  = $true;
+        # LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    },
     @{
         Command      = "Get-PSDrive";
         Sudo         = $false;
