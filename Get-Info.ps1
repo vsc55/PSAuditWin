@@ -409,6 +409,17 @@ $commands = @(
         LogGenCSV    = $true;
         LogShowDebug = $debugMode;
     }
+    @{
+        Command      = "Get-CimInstance -Class Win32_PnPEntity";
+        Sudo         = $false;
+        FileName     = "Win32_PnPEntity.xml";
+        Label        = "Win32 PnP Entity";
+        Log          = $true;
+        LogSelect    = @('Manufacturer', 'Name', 'Status', 'DeviceID');
+        # LogListMode  = $true;
+        LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    }
 )
 
 
