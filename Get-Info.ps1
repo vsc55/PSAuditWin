@@ -408,7 +408,7 @@ $commands = @(
         # LogListMode  = $true;
         LogGenCSV    = $true;
         LogShowDebug = $debugMode;
-    }
+    },
     @{
         Command      = "Get-CimInstance -Class Win32_PnPEntity";
         Sudo         = $false;
@@ -417,9 +417,49 @@ $commands = @(
         Log          = $true;
         LogSelect    = @('Manufacturer', 'Name', 'Status', 'DeviceID');
         # LogListMode  = $true;
-        LogGenCSV    = $true;
+        # LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    },
+    @{
+        Command      = "Get-CimInstance -Class Win32_Process";
+        Sudo         = $false;
+        FileName     = "Win32_Process.xml";
+        Label        = "Win32 Process";
+        Log          = $true;
+        LogSelect    = @('Name', 'CommandLine');
+        # LogListMode  = $true;
+        # LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    },
+    @{
+        Command      = "Get-CimInstance -Class Win32_Service";
+        Sudo         = $false;
+        FileName     = "Win32_Service.xml";
+        Label        = "Win32 Service";
+        Log          = $true;
+        LogSelect    = @('Name', 'DisplayName', 'StartName', 'State', 'PathName');
+        # LogListMode  = $true;
+        # LogGenCSV    = $true;
+        LogShowDebug = $debugMode;
+    },
+    @{
+        Command      = "Get-CimInstance -Namespace root\wmi -Class WmiMonitorID";
+        Sudo         = $false;
+        FileName     = "WmiMonitorID.xml";
+        Label        = "Monitor Info";
+        Log          = $true;
+        ForEach      = {
+            [PSCustomObject]@{
+                Model = [System.Text.Encoding]::ASCII.GetString($_.UserFriendlyName) -replace '\x00', ''
+                SerialNumber = [System.Text.Encoding]::ASCII.GetString($_.SerialNumberID) -replace '\x00', ''
+            }
+        };
+        LogSelect    = @('Model', 'SerialNumber');
+        # LogListMode  = $true;
+        # LogGenCSV    = $true;
         LogShowDebug = $debugMode;
     }
+    
 )
 
 
@@ -506,7 +546,6 @@ foreach ($cmd in $commands)
             Write-Host "      [OK]" -ForegroundColor Green
 
 
-
             # Write-Host ("Generating Log {0}..." -f $cmd.Label) -NoNewline
             Write-Host " - Generating Log..." -NoNewline
             $labelout = $cmd.Label
@@ -519,6 +558,11 @@ foreach ($cmd in $commands)
             
             if ($cmd.Log -eq $true)
             {
+                if ($cmd.ForEach)
+                {
+                    $result = $result | ForEach-Object $cmd.ForEach
+                }
+
                 if ($null -ne $cmd.LogSelect)
                 {
                     $data = $result | Select-Object -Property $cmd.LogSelect
